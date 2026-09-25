@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="preview-portal" content="1">
+  <meta name="robots" content="noindex, nofollow, noarchive">
+  <meta name="referrer" content="same-origin">
+  <meta name="theme-color" content="#07070b">
+  <title>Private Preview</title>
+  <meta name="description" content="Your personal website preview – private and secure.">
+
+  <!-- Link preview in WhatsApp, iMessage, Slack, …
+       Tip: use the full URL for og:image, e.g. https://preview.your-domain.com/assets/img/og-image.png -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Private Website Preview">
+  <meta property="og:description" content="Your personal website preview is ready. Open the link and enter your passcode.">
+  <meta property="og:image" content="assets/img/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+  <link rel="preload" href="assets/fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="assets/css/portal.css">
+
+  <script src="config.js"></script>
+  <script>
+    /* Apply the theme before the first paint (no flash). */
+    (function (c) {
+      var t = (c && c.theme) || 'dark';
+      if (t === 'auto') t = window.matchMedia && matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', t === 'light' ? 'light' : 'dark');
+    })(window.PORTAL_CONFIG);
+  </script>
+  <script src="assets/js/core.js" defer></script>
+  <script src="assets/js/qr.js" defer></script>
+  <script src="assets/js/portal.js" defer></script>
+</head>
+<body data-view="boot">
+
+  <!-- Icons based on Lucide (ISC License) and Tabler Icons (MIT License) -->
+  <svg class="sprite" aria-hidden="true" focusable="false">
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="10" rx="2.5"/><path d="M8 11V7.5a4 4 0 0 1 8 0V11"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></symbol>
+    <symbol id="i-key" viewBox="0 0 24 24"><circle cx="7.5" cy="15.5" r="5.5"/><path d="m21 2-9.6 9.6"/><path d="m15.5 7.5 3 3L22 7l-3-3"/></symbol>
+    <symbol id="i-folder" viewBox="0 0 24 24"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></symbol>
+    <symbol id="i-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></symbol>
+    <symbol id="i-monitor" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></symbol>
+    <symbol id="i-tablet" viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M12 18h.01"/></symbol>
+    <symbol id="i-phone" viewBox="0 0 24 24"><rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M11 18h2"/></symbol>
+    <symbol id="i-rotate" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></symbol>
+    <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></symbol>
+    <symbol id="i-external" viewBox="0 0 24 24"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></symbol>
+    <symbol id="i-qr" viewBox="0 0 24 24"><rect x="3" y="3" width="5" height="5" rx="1"/><rect x="16" y="3" width="5" height="5" rx="1"/><rect x="3" y="16" width="5" height="5" rx="1"/><path d="M21 16h-3a2 2 0 0 0-2 2v3"/><path d="M21 21v.01"/><path d="M12 7v3a2 2 0 0 1-2 2H7"/><path d="M3 12h.01"/><path d="M12 3h.01"/><path d="M12 16v.01"/><path d="M16 12h1"/><path d="M21 12v.01"/><path d="M12 21v-1"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></symbol>
+    <symbol id="i-message" viewBox="0 0 24 24"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></symbol>
+    <symbol id="i-mail" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></symbol>
+    <symbol id="i-call" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></symbol>
+    <symbol id="i-whatsapp" viewBox="0 0 24 24"><path d="M3 21l1.65-3.8a9 9 0 1 1 3.4 2.9l-5.05.9"/><path d="M9 10a.5.5 0 0 0 1 0V9a.5.5 0 0 0-1 0v1a5 5 0 0 0 5 5h1a.5.5 0 0 0 0-1h-1a.5.5 0 0 0 0 1"/></symbol>
+    <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></symbol>
+    <symbol id="i-chevron-left" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></symbol>
+    <symbol id="i-chevron-right" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
+    <symbol id="i-chevron-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+    <symbol id="i-file" viewBox="0 0 24 24"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></symbol>
+    <symbol id="i-sparkles" viewBox="0 0 24 24"><path d="M9.94 15.5A2 2 0 0 0 8.5 14.06l-6.14-1.58a.5.5 0 0 1 0-.96L8.5 9.94A2 2 0 0 0 9.94 8.5l1.58-6.14a.5.5 0 0 1 .96 0l1.58 6.14a2 2 0 0 0 1.44 1.44l6.14 1.58a.5.5 0 0 1 0 .96l-6.14 1.58a2 2 0 0 0-1.44 1.44l-1.58 6.14a.5.5 0 0 1-.96 0z"/><path d="M20 3v4"/><path d="M22 5h-4"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="14" height="14" rx="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></symbol>
+    <symbol id="i-send" viewBox="0 0 24 24"><path d="M14.54 21.69a.5.5 0 0 0 .94-.03l6.5-19a.5.5 0 0 0-.64-.64l-19 6.5a.5.5 0 0 0-.03.94l7.93 3.18a2 2 0 0 1 1.11 1.11z"/><path d="m21.85 2.15-10.94 10.94"/></symbol>
+  </svg>
+
+  <!-- Animated background -->
+  <div class="backdrop" aria-hidden="true">
+    <div class="backdrop__aurora"><span></span><span></span><span></span></div>
+    <div class="backdrop__grid"></div>
+    <div class="backdrop__spot"></div>
+    <div class="backdrop__noise"></div>
+  </div>
+
+  <!-- ═════════════════════════ ACCESS SCREEN ═════════════════════════ -->
+  <main class="gate" id="gate">
+    <header class="gate__top reveal" style="--i:0">
+      <a class="brand" data-brand-link>
+        <span class="brand__mark" data-brand-mark></span>
+        <span class="brand__text"><strong data-brand-name></strong><small data-brand-tagline></small></span>
+      </a>
+      <div class="gate__top-right">
+        <span class="chip chip--secure"><svg class="icon"><use href="#i-shield"/></svg><span data-i18n="secure"></span></span>
+        <div class="lang" role="group" aria-label="Language">
+          <button type="button" data-lang="de">DE</button>
+          <button type="button" data-lang="en">EN</button>
+        </div>
+      </div>
+    </header>
+
+    <section class="gate__main">
+      <div class="gate__intro">
+        <p class="eyebrow reveal" style="--i:1"><span class="eyebrow__dot"></span><span data-i18n="eyebrow"></span></p>
+        <h1 class="gate__title reveal" style="--i:2" id="gate-title"></h1>
+        <p class="gate__lead reveal" style="--i:3" id="gate-lead"></p>
+
+        <form class="access reveal" style="--i:4" id="access-form" novalidate autocomplete="off">
+          <div class="access__project" id="project-chip" hidden>
+            <span class="access__project-label"><svg class="icon"><use href="#i-folder"/></svg><span data-i18n="project"></span></span>
+            <code id="project-chip-id"></code>
+          </div>
+
+          <label class="field" id="project-field" hidden>
+            <span class="field__label" data-i18n="projectId"></span>
+            <span class="field__control">
+              <svg class="icon"><use href="#i-folder"/></svg>
+              <input id="project-input" name="project" type="text" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" maxlength="64">
+            </span>
+          </label>
+
+          <label class="field">
+            <span class="field__label" data-i18n="passcode"></span>
+            <span class="field__control">
+              <svg class="icon"><use href="#i-key"/></svg>
+              <input id="code-input" name="code" class="field__input--code" type="text" autocomplete="off" autocapitalize="characters" autocorrect="off" spellcheck="false" maxlength="64" enterkeyhint="go">
+            </span>
+          </label>
+
+          <label class="check" id="remember-row">
+            <input type="checkbox" id="remember-input" checked>
+            <span class="check__box"><svg class="icon"><use href="#i-check"/></svg></span>
+            <span class="check__label" id="remember-label"></span>
+          </label>
+
+          <button class="btn btn--primary btn--lg btn--block" type="submit" id="submit-btn">
+            <span class="btn__label" id="submit-label"></span>
+            <span class="btn__state" aria-hidden="true">
+              <svg class="icon btn__arrow"><use href="#i-arrow-right"/></svg>
+              <span class="spinner"></span>
+              <svg class="icon btn__check"><use href="#i-check"/></svg>
+            </span>
+          </button>
+
+          <p class="access__error" id="form-error" role="alert" aria-live="assertive"></p>
+        </form>
+
+        <p class="gate__help reveal" style="--i:5" id="gate-help"></p>
+        <p class="notice" id="file-notice" hidden></p>
+      </div>
+
+      <div class="gate__visual reveal" style="--i:3" aria-hidden="true">
+        <div class="scene" id="scene">
+          <div class="mock-browser">
+            <div class="mock-browser__bar"><i></i><i></i><i></i><span class="mock-browser__url"></span></div>
+            <div class="mock-browser__body">
+              <div class="sk-nav"><span class="sk-logo"></span><span class="sk-links"><i></i><i></i><i></i></span><span class="sk-pill"></span></div>
+              <div class="sk-hero">
+                <div class="sk-hero__text">
+                  <i class="sk-line sk-line--xl"></i><i class="sk-line sk-line--lg"></i>
+                  <i class="sk-line sk-line--md"></i><i class="sk-line sk-line--sm"></i>
+                  <span class="sk-cta"></span>
+                </div>
+                <div class="sk-hero__media"><span class="sk-sun"></span></div>
+              </div>
+              <div class="sk-cards"><span></span><span></span><span></span></div>
+            </div>
+          </div>
+          <div class="mock-phone">
+            <span class="mock-phone__island"></span>
+            <div class="mock-phone__screen">
+              <div class="sk-media"><span class="sk-sun"></span></div>
+              <i class="sk-line sk-line--lg"></i><i class="sk-line sk-line--md"></i>
+              <span class="sk-cta"></span>
+              <div class="sk-media sk-media--sm"></div>
+            </div>
+          </div>
+          <div class="lock-orb" id="lock-orb">
+            <svg viewBox="0 0 24 24" class="lock-orb__icon">
+              <path class="lock-orb__shackle" d="M8 11V7.5a4 4 0 0 1 8 0V11"/>
+              <rect x="4" y="11" width="16" height="10" rx="2.5"/>
+              <circle class="lock-orb__hole" cx="12" cy="16" r="1.2"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="gate__footer reveal" style="--i:6">
+      <span id="footer-copy"></span>
+      <span class="gate__footer-note"><svg class="icon"><use href="#i-lock"/></svg><span data-i18n="footerNote"></span></span>
+    </footer>
+  </main>
+
+  <!-- ═════════════════════════ WELCOME ═════════════════════════ -->
+  <div class="welcome" id="welcome" aria-live="polite">
+    <div class="welcome__inner">
+      <span class="welcome__badge"><svg class="icon"><use href="#i-check"/></svg></span>
+      <p class="welcome__eyebrow" id="welcome-eyebrow"></p>
+      <h2 class="welcome__title" id="welcome-title"></h2>
+      <p class="welcome__sub" id="welcome-sub"></p>
+    </div>
+  </div>
+
+  <!-- ═════════════════════════ VIEWER ═════════════════════════ -->
+  <div class="viewer" id="viewer">
+    <header class="bar">
+      <div class="bar__left">
+        <a class="brand brand--compact" data-brand-link><span class="brand__mark" data-brand-mark></span></a>
+        <span class="bar__sep" aria-hidden="true"></span>
+        <div class="bar__project">
+          <strong id="v-title"></strong>
+          <span class="bar__meta"><span id="v-customer"></span><span class="badge" id="v-version" hidden></span></span>
+        </div>
+      </div>
+
+      <div class="bar__center">
+        <div class="seg" role="radiogroup" id="device-seg">
+          <span class="seg__thumb" aria-hidden="true"></span>
+          <button type="button" role="radio" data-device="desktop"><svg class="icon"><use href="#i-monitor"/></svg><span data-i18n="desktop"></span></button>
+          <button type="button" role="radio" data-device="tablet"><svg class="icon"><use href="#i-tablet"/></svg><span data-i18n="tablet"></span></button>
+          <button type="button" role="radio" data-device="mobile"><svg class="icon"><use href="#i-phone"/></svg><span data-i18n="mobile"></span></button>
+        </div>
+        <button type="button" class="icon-btn" id="rotate-btn" data-tip-key="rotate"><svg class="icon"><use href="#i-rotate"/></svg></button>
+      </div>
+
+      <div class="bar__right">
+        <button type="button" class="icon-btn" id="qr-btn" data-tip-key="qrTitle" aria-haspopup="dialog" aria-expanded="false"><svg class="icon"><use href="#i-qr"/></svg></button>
+        <button type="button" class="icon-btn" id="info-btn" data-tip-key="projectInfo" aria-haspopup="dialog"><svg class="icon"><use href="#i-info"/></svg></button>
+        <a class="icon-btn" id="open-btn" target="_blank" rel="noopener" data-tip-key="openNewTab"><svg class="icon"><use href="#i-external"/></svg></a>
+        <button type="button" class="icon-btn" id="lock-btn" data-tip-key="lock"><svg class="icon"><use href="#i-lock"/></svg></button>
+        <button type="button" class="btn btn--primary btn--sm" id="feedback-btn" aria-haspopup="dialog"><svg class="icon"><use href="#i-message"/></svg><span data-i18n="feedback"></span></button>
+      </div>
+    </header>
+
+    <main class="stage" id="stage">
+      <div class="stage__inner">
+        <div class="device" id="device" data-device="desktop">
+          <div class="device__chrome">
+            <span class="device__lights" aria-hidden="true"><i></i><i></i><i></i></span>
+            <span class="device__nav">
+              <button type="button" id="nav-back" data-i18n-label="back" disabled><svg class="icon"><use href="#i-chevron-left"/></svg></button>
+              <button type="button" id="nav-forward" data-i18n-label="forward" disabled><svg class="icon"><use href="#i-chevron-right"/></svg></button>
+              <button type="button" id="nav-reload" data-i18n-label="reload"><svg class="icon"><use href="#i-refresh"/></svg></button>
+            </span>
+            <span class="device__url"><svg class="icon"><use href="#i-lock"/></svg><span class="device__url-text"><span id="url-host"></span><span id="url-path"></span></span></span>
+            <span class="device__tools">
+              <span class="pages" id="pages" hidden>
+                <button type="button" class="pages__btn" id="pages-btn" aria-haspopup="true" aria-expanded="false"><svg class="icon"><use href="#i-file"/></svg><span data-i18n="pages"></span><svg class="icon pages__chev"><use href="#i-chevron-down"/></svg></button>
+                <span class="pages__list" id="pages-list" role="menu"></span>
+              </span>
+            </span>
+          </div>
+          <div class="device__status" aria-hidden="true">
+            <span class="device__time">9:41</span>
+            <span class="device__island"></span>
+            <span class="device__sys">
+              <svg viewBox="0 0 18 12"><rect x="0" y="8" width="3" height="4" rx=".8"/><rect x="5" y="5.5" width="3" height="6.5" rx=".8"/><rect x="10" y="3" width="3" height="9" rx=".8"/><rect x="15" y="0" width="3" height="12" rx=".8"/></svg>
+              <svg viewBox="0 0 16 12"><path d="M8 11.6 5.7 9.2a3.3 3.3 0 0 1 4.6 0zM3.6 7.1a6.3 6.3 0 0 1 8.8 0l-1.4 1.5a4.3 4.3 0 0 0-6 0zM1.4 4.9a9.4 9.4 0 0 1 13.2 0l-1.4 1.4a7.4 7.4 0 0 0-10.4 0z"/></svg>
+              <svg viewBox="0 0 27 13"><rect x=".5" y=".5" width="22" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".45"/><rect x="2.5" y="2.5" width="18" height="8" rx="2"/><path d="M24.5 4.5v4a2 2 0 0 0 0-4z" opacity=".45"/></svg>
+            </span>
+          </div>
+          <div class="device__screen">
+            <iframe id="frame" title="Website preview"></iframe>
+            <div class="device__loader"><span class="spinner spinner--lg"></span><span data-i18n="loading"></span></div>
+            <span class="device__home" aria-hidden="true"></span>
+          </div>
+          <span class="device__camera" aria-hidden="true"></span>
+        </div>
+        <p class="stage__caption" id="caption"></p>
+      </div>
+    </main>
+  </div>
+
+  <!-- ═════════════════════════ PANELS ═════════════════════════ -->
+  <div class="scrim" id="scrim"></div>
+
+  <aside class="drawer" id="info-drawer" role="dialog" aria-modal="true" aria-labelledby="info-title" inert>
+    <div class="drawer__head">
+      <h2 id="info-title" data-i18n="infoTitle"></h2>
+      <button type="button" class="icon-btn" data-close data-i18n-label="close"><svg class="icon"><use href="#i-x"/></svg></button>
+    </div>
+    <div class="drawer__body" id="info-body"></div>
+  </aside>
+
+  <div class="modal" id="feedback-modal" role="dialog" aria-modal="true" aria-labelledby="feedback-title" inert>
+    <form class="modal__card" id="feedback-form" novalidate>
+      <div class="modal__head">
+        <span class="modal__icon"><svg class="icon"><use href="#i-message"/></svg></span>
+        <div>
+          <h2 id="feedback-title" data-i18n="feedbackTitle"></h2>
+          <p id="feedback-lead"></p>
+        </div>
+        <button type="button" class="icon-btn" data-close data-i18n-label="close"><svg class="icon"><use href="#i-x"/></svg></button>
+      </div>
+      <div class="modal__context" id="feedback-context"></div>
+      <label class="sr-only" for="feedback-text" data-i18n="feedbackTitle"></label>
+      <textarea id="feedback-text" rows="6"></textarea>
+      <p class="modal__error" id="feedback-error" role="alert"></p>
+      <div class="modal__actions" id="feedback-actions"></div>
+    </form>
+  </div>
+
+  <div class="popover" id="qr-popover" role="dialog" aria-labelledby="qr-title" inert>
+    <div class="popover__qr" id="qr-code"></div>
+    <h3 id="qr-title" data-i18n="qrTitle"></h3>
+    <p data-i18n="qrText"></p>
+    <button type="button" class="btn btn--ghost btn--sm btn--block" id="qr-copy"><svg class="icon"><use href="#i-copy"/></svg><span data-i18n="copyLink"></span></button>
+  </div>
+
+  <div class="note" id="note" role="status" inert>
+    <div class="note__head">
+      <span class="avatar" data-avatar></span>
+      <div class="note__who"><strong id="note-title"></strong><small id="note-role"></small></div>
+      <button type="button" class="icon-btn icon-btn--sm" data-close data-i18n-label="close"><svg class="icon"><use href="#i-x"/></svg></button>
+    </div>
+    <p class="note__text" id="note-text"></p>
+    <button type="button" class="note__more" id="note-more"><span data-i18n="readMore"></span><svg class="icon"><use href="#i-arrow-right"/></svg></button>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <noscript>
+    <div class="noscript">Please enable JavaScript to open your preview. · Bitte aktivieren Sie JavaScript, um Ihre Vorschau zu öffnen.</div>
+  </noscript>
+</body>
+</html>

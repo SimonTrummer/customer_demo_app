@@ -1,0 +1,24 @@
+# ─────────────────────────────────────────────────────────────────────
+#  OPTIONAL extra protection for Apache servers (most shared hosting).
+#  If your site shows "500 Internal Server Error" after uploading,
+#  simply delete this file – the portal works fine without it.
+#  (FileZilla hides files starting with a dot by default:
+#   Server → "Force showing hidden files".)
+# ─────────────────────────────────────────────────────────────────────
+
+<IfModule mod_headers.c>
+  # Keep every preview out of search engines – including your clients' pages
+  Header set X-Robots-Tag "noindex, nofollow, noarchive"
+  # Never send the secret preview addresses to other websites
+  Header set Referrer-Policy "same-origin"
+
+  # Clients always see your latest upload (files are re-checked, not re-downloaded)
+  <FilesMatch "\.(html?|css|js|json)$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+</IfModule>
+
+# Stop directory listings everywhere. The portal already protects the
+# projects folder with an index.html, so this is only a second layer.
+# Some hosts don't allow this line – remove the # to activate it.
+# Options -Indexes

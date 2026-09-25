@@ -1,0 +1,18 @@
+{
+  "customer": "Café Alma",
+  "title": "Website Relaunch",
+  "domain": "www.cafe-alma.at",
+  "version": "Draft 2",
+  "updated": "2026-09-25",
+  "device": "desktop",
+  "note": "Here’s the second draft of your new website! I reworked the menu page and added the opening hours with a map. Take your time and click through it on desktop and on your phone – I’m looking forward to your feedback.",
+  "changes": [
+    "New menu page with all prices",
+    "Opening hours & map on the start page",
+    "Faster loading on mobile"
+  ],
+  "pages": [
+    { "title": "Home", "path": "index.html" },
+    { "title": "Menu", "path": "menu.html" }
+  ]
+}

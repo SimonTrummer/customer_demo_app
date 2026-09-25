@@ -1,0 +1,11 @@
+# Client projects are private work and their folder names are secret.
+# They are kept out of Git on purpose – only the demo project is tracked.
+public/projects/*
+!public/projects/index.html
+!public/projects/cafe-alma_703d01e64ca560af/
+
+# System files
+.DS_Store
+Thumbs.db
+desktop.ini
+node_modules/

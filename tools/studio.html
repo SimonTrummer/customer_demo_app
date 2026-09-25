@@ -1,0 +1,662 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Preview Studio</title>
+  <link rel="icon" href="../public/assets/img/favicon.svg" type="image/svg+xml">
+  <!--
+    Preview Studio — your local helper. Open this file directly in your browser (double-click).
+    It does NOT need to be uploaded. Everything stays on your computer.
+  -->
+  <script src="../public/config.js"></script>
+  <script src="../public/assets/js/core.js"></script>
+  <script src="../public/assets/js/qr.js"></script>
+  <style>
+    @font-face { font-family: "Inter Variable"; font-weight: 100 900; font-display: swap; src: url("../public/assets/fonts/inter-latin-wght-normal.woff2") format("woff2"); }
+    @font-face { font-family: "Instrument Serif"; font-style: italic; font-display: swap; src: url("../public/assets/fonts/instrument-serif-latin-400-italic.woff2") format("woff2"); }
+
+    :root {
+      --accent: #7c5cff;
+      --accent-2: #33c7f0;
+      --bg: #07070b;
+      --panel: #0f0f16;
+      --panel-2: #14141d;
+      --surface: rgba(255, 255, 255, 0.045);
+      --surface-2: rgba(255, 255, 255, 0.08);
+      --border: rgba(255, 255, 255, 0.08);
+      --border-2: rgba(255, 255, 255, 0.14);
+      --text: #f5f5f8;
+      --text-2: rgba(245, 245, 248, 0.7);
+      --text-3: rgba(245, 245, 248, 0.46);
+      --success: #34d399;
+      --warn: #fbbf24;
+      --sans: "Inter Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      --mono: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, Consolas, monospace;
+      color-scheme: dark;
+    }
+    * { box-sizing: border-box; }
+    [hidden] { display: none !important; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(900px 500px at 10% -10%, color-mix(in srgb, var(--accent) 22%, transparent), transparent 70%),
+        radial-gradient(800px 500px at 100% 0%, color-mix(in srgb, var(--accent-2) 12%, transparent), transparent 70%),
+        var(--bg);
+      color: var(--text);
+      font: 14.5px/1.5 var(--sans);
+      -webkit-font-smoothing: antialiased;
+    }
+    button, input, textarea, select { font: inherit; color: inherit; }
+    button { cursor: pointer; }
+    a { color: inherit; }
+    h1, h2, h3, p { margin: 0; }
+    .icon { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+
+    .wrap { width: min(1240px, 100% - 40px); margin: 0 auto; padding: 32px 0 60px; }
+
+    header.top { display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap; margin-bottom: 28px; }
+    .title { display: flex; align-items: center; gap: 16px; }
+    .mark {
+      display: grid; place-items: center; width: 48px; height: 48px; border-radius: 14px;
+      background: radial-gradient(120% 120% at 0% 0%, rgba(255,255,255,.35), transparent 50%), linear-gradient(135deg, var(--accent), var(--accent-2));
+      box-shadow: 0 12px 28px -12px var(--accent);
+    }
+    .mark svg { width: 24px; height: 24px; stroke: #fff; }
+    h1 { font-size: 26px; font-weight: 650; letter-spacing: -0.03em; }
+    h1 em { font-family: "Instrument Serif", Georgia, serif; font-weight: 400; font-size: 1.12em; background: linear-gradient(100deg, #c4b5ff, var(--accent-2)); -webkit-background-clip: text; background-clip: text; color: transparent; padding-right: .05em; }
+    .subtitle { color: var(--text-3); font-size: 14px; margin-top: 2px; }
+
+    .portal-url { display: flex; align-items: center; gap: 10px; padding: 6px 6px 6px 14px; border-radius: 14px; background: var(--panel); border: 1px solid var(--border); min-width: min(460px, 100%); }
+    .portal-url label { font-size: 12.5px; color: var(--text-3); white-space: nowrap; }
+    .portal-url input { flex: 1; min-width: 0; height: 34px; border: 0; outline: 0; background: transparent; font-family: var(--mono); font-size: 13px; }
+
+    .grid { display: grid; grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr); gap: 20px; align-items: start; }
+    .col { display: grid; gap: 20px; }
+    .card { position: relative; padding: 22px; border-radius: 20px; background: linear-gradient(180deg, var(--panel-2), var(--panel)); border: 1px solid var(--border); box-shadow: 0 30px 60px -40px rgba(0,0,0,.8); }
+    .card h2 { display: flex; align-items: center; gap: 12px; font-size: 16px; font-weight: 600; letter-spacing: -0.01em; margin-bottom: 18px; }
+    .step { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 8px; font-size: 13px; font-weight: 700; background: color-mix(in srgb, var(--accent) 22%, transparent); color: #d9d0ff; border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent); }
+    .card h2 small { margin-left: auto; font-weight: 500; font-size: 12.5px; color: var(--text-3); }
+
+    .fields { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .field { display: grid; gap: 6px; }
+    .field--full { grid-column: 1 / -1; }
+    .field label { font-size: 12.5px; font-weight: 500; color: var(--text-2); display: flex; justify-content: space-between; gap: 8px; }
+    .field label span { color: var(--text-3); font-weight: 400; }
+    .input { display: flex; align-items: center; gap: 6px; height: 42px; padding: 0 6px 0 12px; border-radius: 11px; background: rgba(0,0,0,.25); border: 1px solid var(--border-2); transition: border-color .2s, box-shadow .2s; }
+    .input:focus-within, textarea:focus, select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 22%, transparent); outline: 0; }
+    .input input { flex: 1; min-width: 0; height: 100%; border: 0; outline: 0; background: transparent; }
+    .input input.mono { font-family: var(--mono); letter-spacing: .06em; }
+    textarea, select { width: 100%; padding: 10px 12px; border-radius: 11px; background: rgba(0,0,0,.25); border: 1px solid var(--border-2); resize: vertical; min-height: 42px; }
+    select { height: 42px; padding: 0 10px; }
+    textarea { min-height: 76px; line-height: 1.5; }
+    .hint { font-size: 12px; color: var(--text-3); line-height: 1.45; }
+
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 36px; padding: 0 14px; border-radius: 10px; border: 1px solid var(--border-2); background: var(--surface); font-size: 13px; font-weight: 600; white-space: nowrap; transition: background-color .2s, border-color .2s, transform .15s; text-decoration: none; }
+    .btn:hover { background: var(--surface-2); }
+    .btn:active { transform: scale(.98); }
+    .btn--primary { border: 0; color: #fff; background: linear-gradient(135deg, var(--accent), color-mix(in srgb, var(--accent) 60%, var(--accent-2))); box-shadow: 0 10px 24px -12px var(--accent), inset 0 1px 0 rgba(255,255,255,.25); }
+    .btn--primary:hover { background: linear-gradient(135deg, var(--accent), color-mix(in srgb, var(--accent) 60%, var(--accent-2))); filter: brightness(1.08); }
+    .btn--icon { width: 32px; height: 32px; padding: 0; border-radius: 8px; border: 0; background: transparent; color: var(--text-2); }
+    .btn--icon:hover { background: var(--surface-2); color: var(--text); }
+    .btn--sm { height: 30px; padding: 0 10px; font-size: 12.5px; border-radius: 8px; }
+    .btn-row { display: flex; flex-wrap: wrap; gap: 8px; }
+
+    .out { display: grid; gap: 14px; }
+    .out-row { display: grid; gap: 6px; }
+    .out-row > span { font-size: 12.5px; font-weight: 500; color: var(--text-2); }
+    .value { display: flex; align-items: center; gap: 8px; min-height: 44px; padding: 6px 6px 6px 14px; border-radius: 12px; background: rgba(0,0,0,.3); border: 1px solid var(--border); font-family: var(--mono); font-size: 13.5px; }
+    .value code { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+    .value--big { font-size: 16px; min-height: 56px; border-color: color-mix(in srgb, var(--accent) 45%, transparent); background: color-mix(in srgb, var(--accent) 8%, rgba(0,0,0,.3)); }
+    .value--big code { color: #fff; }
+    .value--big code b { color: #c4b5ff; font-weight: 500; }
+
+    .path { margin-top: 10px; padding: 12px 14px; border-radius: 12px; background: var(--surface); border: 1px dashed var(--border-2); font-family: var(--mono); font-size: 12.5px; color: var(--text-2); line-height: 1.7; overflow-x: auto; white-space: pre; }
+    .path b { color: var(--text); font-weight: 600; }
+    .path i { color: #c4b5ff; font-style: normal; }
+
+    .callout { display: flex; gap: 10px; padding: 12px 14px; border-radius: 12px; font-size: 13px; line-height: 1.5; background: rgba(251,191,36,.08); border: 1px solid rgba(251,191,36,.25); color: #fcd9a0; }
+    .callout .icon { margin-top: 2px; color: var(--warn); }
+    .callout code { font-family: var(--mono); font-size: 12px; color: #fff; }
+    .callout--ok { background: rgba(52,211,153,.07); border-color: rgba(52,211,153,.25); color: #a7f3d0; }
+    .callout--ok .icon { color: var(--success); }
+
+    pre.json { margin: 0; max-height: 300px; overflow: auto; padding: 14px 16px; border-radius: 12px; background: rgba(0,0,0,.35); border: 1px solid var(--border); font: 12.5px/1.6 var(--mono); color: #d7d7e0; }
+
+    .send { display: grid; grid-template-columns: 1fr 172px; gap: 18px; align-items: start; }
+    .qr { display: grid; gap: 8px; justify-items: center; text-align: center; }
+    .qr__code { width: 172px; height: 172px; padding: 12px; border-radius: 16px; background: #fff; }
+    .qr__code svg { width: 100%; height: 100%; }
+    .qr small { color: var(--text-3); font-size: 11.5px; }
+
+    .tabs { display: inline-flex; padding: 3px; border-radius: 10px; background: var(--surface); border: 1px solid var(--border); }
+    .tabs button { height: 26px; padding: 0 10px; border-radius: 7px; border: 0; background: transparent; font-size: 12px; font-weight: 600; color: var(--text-3); }
+    .tabs button[aria-pressed="true"] { background: var(--surface-2); color: var(--text); }
+    .msg-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    #message { min-height: 210px; font-size: 13.5px; }
+
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+    th { text-align: left; font-size: 12px; font-weight: 600; color: var(--text-3); text-transform: uppercase; letter-spacing: .06em; padding: 0 10px 10px; }
+    td { padding: 10px; border-top: 1px solid var(--border); vertical-align: middle; }
+    td code { font-family: var(--mono); font-size: 12.5px; }
+    td.actions { text-align: right; white-space: nowrap; }
+    .empty { padding: 26px; text-align: center; color: var(--text-3); border: 1px dashed var(--border-2); border-radius: 14px; }
+
+    .toast { position: fixed; left: 50%; bottom: 26px; transform: translate(-50%, 20px); opacity: 0; padding: 10px 16px; border-radius: 999px; background: #1f1f2b; border: 1px solid var(--border-2); font-weight: 500; font-size: 13.5px; transition: opacity .25s, transform .35s cubic-bezier(.16,1,.3,1); pointer-events: none; display: flex; gap: 8px; align-items: center; z-index: 10; }
+    .toast.show { opacity: 1; transform: translate(-50%, 0); }
+    .toast .icon { color: var(--success); }
+
+    footer { margin-top: 28px; color: var(--text-3); font-size: 12.5px; text-align: center; }
+
+    @media (max-width: 980px) {
+      .grid { grid-template-columns: 1fr; }
+      .send { grid-template-columns: 1fr; }
+      .qr { justify-items: start; text-align: left; }
+    }
+    @media (max-width: 560px) { .fields { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="14" height="14" rx="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></symbol>
+    <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></symbol>
+    <symbol id="i-external" viewBox="0 0 24 24"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></symbol>
+    <symbol id="i-mail" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></symbol>
+    <symbol id="i-whatsapp" viewBox="0 0 24 24"><path d="M3 21l1.65-3.8a9 9 0 1 1 3.4 2.9l-5.05.9"/><path d="M9 10a.5.5 0 0 0 1 0V9a.5.5 0 0 0-1 0v1a5 5 0 0 0 5 5h1a.5.5 0 0 0 0-1h-1a.5.5 0 0 0 0 1"/></symbol>
+    <symbol id="i-save" viewBox="0 0 24 24"><path d="M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/><path d="M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7"/><path d="M7 3v4a1 1 0 0 0 1 1h7"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></symbol>
+    <symbol id="i-edit" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.38 3.62a1 1 0 0 1 3 3L7.37 18.64a2 2 0 0 1-.86.5l-2.87.84a.5.5 0 0 1-.62-.62l.84-2.87a2 2 0 0 1 .5-.86z"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="10" rx="2.5"/><path d="M8 11V7.5a4 4 0 0 1 8 0V11"/></symbol>
+  </svg>
+
+  <div class="wrap">
+    <header class="top">
+      <div class="title">
+        <span class="mark"><svg class="icon" style="width:24px;height:24px"><use href="#i-lock"/></svg></span>
+        <div>
+          <h1>Preview <em>Studio</em></h1>
+          <p class="subtitle">Create a private client preview in three steps. Runs only on your computer.</p>
+        </div>
+      </div>
+      <div class="portal-url" title="Where your portal lives on the web (the folder that contains index.html and config.js)">
+        <label for="portal-url">Portal URL</label>
+        <input id="portal-url" type="url" placeholder="https://preview.your-domain.com/" spellcheck="false">
+      </div>
+    </header>
+
+    <div class="grid">
+      <!-- Step 1 -->
+      <section class="card">
+        <h2><span class="step">1</span>Project details <small>* required</small></h2>
+        <div class="fields">
+          <div class="field">
+            <label for="customer">Client name *</label>
+            <div class="input"><input id="customer" placeholder="Café Alma" autocomplete="off"></div>
+          </div>
+          <div class="field">
+            <label for="title">Project title</label>
+            <div class="input"><input id="title" placeholder="Website Relaunch" autocomplete="off"></div>
+          </div>
+          <div class="field">
+            <label for="slug">Project ID <span>part of the link</span></label>
+            <div class="input"><input id="slug" class="mono" placeholder="cafe-alma" autocomplete="off" spellcheck="false"></div>
+          </div>
+          <div class="field">
+            <label for="code">Passcode *</label>
+            <div class="input">
+              <input id="code" class="mono" autocomplete="off" spellcheck="false">
+              <button class="btn btn--icon" type="button" id="new-code" title="Generate a new passcode"><svg class="icon"><use href="#i-refresh"/></svg></button>
+            </div>
+          </div>
+          <div class="field">
+            <label for="domain">Future domain <span>shown in the address bar</span></label>
+            <div class="input"><input id="domain" placeholder="www.cafe-alma.at" autocomplete="off" spellcheck="false"></div>
+          </div>
+          <div class="field">
+            <label for="version">Version label</label>
+            <div class="input"><input id="version" placeholder="Draft 1" autocomplete="off"></div>
+          </div>
+          <div class="field">
+            <label for="updated">Updated on</label>
+            <div class="input"><input id="updated" type="date"></div>
+          </div>
+          <div class="field">
+            <label for="device">Opens in view</label>
+            <select id="device">
+              <option value="">Default (from config.js)</option>
+              <option value="desktop">Desktop</option>
+              <option value="tablet">Tablet</option>
+              <option value="mobile">Smartphone</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="entry">Start page</label>
+            <div class="input"><input id="entry" class="mono" placeholder="index.html" autocomplete="off" spellcheck="false"></div>
+          </div>
+          <div class="field field--full">
+            <label for="note">Personal note to the client <span>optional</span></label>
+            <textarea id="note" placeholder="Here’s the first draft of your new website. Take your time and click through it – I’m looking forward to your feedback!"></textarea>
+          </div>
+          <div class="field field--full">
+            <label for="changes">What’s new in this version <span>one per line</span></label>
+            <textarea id="changes" placeholder="New menu page&#10;Opening hours with map"></textarea>
+          </div>
+          <div class="field field--full">
+            <label for="pages">Pages menu <span>one per line: Title | file.html</span></label>
+            <textarea id="pages" placeholder="Home | index.html&#10;Menu | menu.html"></textarea>
+          </div>
+        </div>
+        <div class="btn-row" style="margin-top:18px">
+          <button class="btn btn--primary" type="button" id="save"><svg class="icon"><use href="#i-save"/></svg>Save to my projects</button>
+          <button class="btn" type="button" id="reset">New project</button>
+        </div>
+      </section>
+
+      <div class="col">
+        <!-- Step 2 -->
+        <section class="card">
+          <h2><span class="step">2</span>Put the files in place</h2>
+          <div class="out">
+            <div class="out-row">
+              <span>Rename your website folder to exactly this:</span>
+              <div class="value value--big"><code id="folder">—</code><button class="btn btn--icon" type="button" data-copy="folder" title="Copy"><svg class="icon"><use href="#i-copy"/></svg></button></div>
+              <div class="path" id="tree"></div>
+            </div>
+            <div class="callout" id="rename-hint" hidden><svg class="icon"><use href="#i-alert"/></svg><span></span></div>
+            <div class="out-row">
+              <div class="msg-head">
+                <span>Optional: save this as <code>preview.json</code> inside that folder</span>
+                <div class="btn-row">
+                  <button class="btn btn--sm" type="button" data-copy="json"><svg class="icon"><use href="#i-copy"/></svg>Copy</button>
+                  <button class="btn btn--sm" type="button" id="download-json"><svg class="icon"><use href="#i-download"/></svg>Download</button>
+                </div>
+              </div>
+              <pre class="json" id="json"></pre>
+            </div>
+            <div class="callout callout--ok"><svg class="icon"><use href="#i-check"/></svg><span>Then upload the folder with FileZilla into the <code id="projects-folder-name">projects</code> folder on your server. Nothing else needs to change – no list to update, no passcode stored anywhere.</span></div>
+          </div>
+        </section>
+
+        <!-- Step 3 -->
+        <section class="card">
+          <h2><span class="step">3</span>Send it to your client</h2>
+          <div class="send">
+            <div class="out">
+              <div class="out-row">
+                <span>Link</span>
+                <div class="value"><code id="link">—</code><button class="btn btn--icon" type="button" data-copy="link" title="Copy"><svg class="icon"><use href="#i-copy"/></svg></button></div>
+              </div>
+              <div class="out-row">
+                <span>Passcode</span>
+                <div class="value"><code id="code-out">—</code><button class="btn btn--icon" type="button" data-copy="code-out" title="Copy"><svg class="icon"><use href="#i-copy"/></svg></button></div>
+              </div>
+              <div class="out-row">
+                <span>One-click link (includes the passcode – for people you trust)</span>
+                <div class="value"><code id="magic">—</code><button class="btn btn--icon" type="button" data-copy="magic" title="Copy"><svg class="icon"><use href="#i-copy"/></svg></button></div>
+              </div>
+            </div>
+            <div class="qr">
+              <div class="qr__code" id="qr"></div>
+              <small>Scan = opens unlocked</small>
+              <button class="btn btn--sm" type="button" id="download-qr"><svg class="icon"><use href="#i-download"/></svg>QR as PNG</button>
+            </div>
+          </div>
+
+          <div class="out-row" style="margin-top:18px">
+            <div class="msg-head">
+              <span>Message</span>
+              <div class="tabs" role="group" aria-label="Message language">
+                <button type="button" data-msg-lang="de">Deutsch</button>
+                <button type="button" data-msg-lang="en">English</button>
+              </div>
+            </div>
+            <textarea id="message"></textarea>
+            <div class="btn-row">
+              <button class="btn" type="button" data-copy="message"><svg class="icon"><use href="#i-copy"/></svg>Copy message</button>
+              <a class="btn" id="send-mail" href="#"><svg class="icon"><use href="#i-mail"/></svg>Email</a>
+              <a class="btn" id="send-wa" href="#" target="_blank" rel="noopener"><svg class="icon"><use href="#i-whatsapp"/></svg>WhatsApp</a>
+              <a class="btn btn--primary" id="test" href="#" target="_blank" rel="noopener"><svg class="icon"><use href="#i-external"/></svg>Test the preview</a>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- History -->
+    <section class="card" style="margin-top:20px">
+      <h2><span class="step">★</span>My projects <small>saved in this browser only – export as a backup</small></h2>
+      <div class="table-wrap" id="history"></div>
+      <div class="btn-row" style="margin-top:14px">
+        <button class="btn btn--sm" type="button" id="export"><svg class="icon"><use href="#i-download"/></svg>Export list</button>
+        <label class="btn btn--sm" style="cursor:pointer">Import list<input type="file" id="import" accept="application/json,.json" hidden></label>
+      </div>
+    </section>
+
+    <footer>The folder name is calculated from project ID + passcode, exactly like the portal does it. Lost a passcode? Just create a new one and rename the folder.</footer>
+  </div>
+
+  <div class="toast" id="toast"><svg class="icon"><use href="#i-check"/></svg><span></span></div>
+
+  <script>
+  (function () {
+    'use strict';
+    var Core = window.PreviewCore;
+    var QR = window.PreviewQR;
+    var CFG = window.PORTAL_CONFIG || {};
+    var PROJECTS_KEY = 'preview-studio:projects';
+    var URL_KEY = 'preview-studio:portal-url';
+    var LANG_KEY = 'preview-studio:msg-lang';
+
+    function $(id) { return document.getElementById(id); }
+    function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+    function store(key, value) { try { localStorage.setItem(key, JSON.stringify(value)); } catch (e) {} }
+    function load(key, fallback) { try { var v = JSON.parse(localStorage.getItem(key)); return v == null ? fallback : v; } catch (e) { return fallback; } }
+    function today() { var d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+
+    if (!Core || !QR) {
+      document.body.innerHTML = '<p style="padding:40px;font:16px system-ui">Could not load <code>../public/assets/js/core.js</code>. Keep <b>studio.html</b> inside the <b>tools</b> folder next to the <b>public</b> folder.</p>';
+      return;
+    }
+
+    // Brand colors from config.js
+    if (CFG.accent) document.documentElement.style.setProperty('--accent', CFG.accent);
+    if (CFG.accent2) document.documentElement.style.setProperty('--accent-2', CFG.accent2);
+
+    var projectsFolder = String(CFG.projectsFolder || 'projects').replace(/^\/+|\/+$/g, '');
+    $('projects-folder-name').textContent = projectsFolder + '/';
+    var designer = (CFG.contact && CFG.contact.name) || (CFG.brand && CFG.brand.name) || '';
+
+    var state = { slugTouched: false, loadedFolder: null, messageTouched: false, lang: load(LANG_KEY, /^de\b/i.test(navigator.language || '') ? 'de' : 'en') };
+    var fields = ['customer', 'title', 'slug', 'code', 'domain', 'version', 'updated', 'device', 'entry', 'note', 'changes', 'pages'];
+
+    function values() {
+      var v = {};
+      fields.forEach(function (f) { v[f] = $(f).value.trim(); });
+      v.slug = Core.slugify(v.slug || v.customer);
+      return v;
+    }
+
+    function portalUrl() {
+      var u = $('portal-url').value.trim() || 'https://preview.your-domain.com/';
+      if (!/^https?:\/\//i.test(u)) u = 'https://' + u;
+      u = u.replace(/index\.html?$/i, '');
+      return u.replace(/\/*$/, '/');
+    }
+
+    function previewJson(v) {
+      var o = {};
+      if (v.customer) o.customer = v.customer;
+      if (v.title) o.title = v.title;
+      if (v.domain) o.domain = v.domain.replace(/^https?:\/\//i, '').replace(/\/+$/, '');
+      if (v.version) o.version = v.version;
+      if (v.updated) o.updated = v.updated;
+      if (v.device) o.device = v.device;
+      if (v.entry && v.entry !== 'index.html') o.entry = v.entry;
+      if (v.note) o.note = v.note;
+      var changes = v.changes.split('\n').map(function (s) { return s.trim(); }).filter(Boolean);
+      if (changes.length) o.changes = changes;
+      var pages = v.pages.split('\n').map(function (line) {
+        line = line.trim();
+        if (!line) return null;
+        var parts = line.split('|');
+        var title = parts.length > 1 ? parts[0].trim() : '';
+        var path = (parts.length > 1 ? parts.slice(1).join('|') : parts[0]).trim();
+        return path ? { title: title || path, path: path } : null;
+      }).filter(Boolean);
+      if (pages.length) o.pages = pages;
+      return JSON.stringify(o, null, 2) + '\n';
+    }
+
+    var MESSAGES = {
+      de: function (d) {
+        return 'Hallo ' + (d.customer || '') + ',\n\n' +
+          (d.title ? 'die Vorschau für „' + d.title + '“ ist fertig! 🎉' : 'Ihre Website-Vorschau ist fertig! 🎉') + '\n\n' +
+          '👉 ' + d.link + '\n' +
+          '🔑 Zugangscode: ' + d.code + '\n\n' +
+          'Öffnen Sie einfach den Link und geben Sie den Code ein – das funktioniert am Computer, Tablet und Smartphone. Über den Button „Feedback“ können Sie mir direkt Ihre Anmerkungen schicken.\n\n' +
+          'Ich freue mich auf Ihre Rückmeldung!\n\nViele Grüße\n' + designer;
+      },
+      en: function (d) {
+        return 'Hi ' + (d.customer || '') + ',\n\n' +
+          (d.title ? 'the preview of “' + d.title + '” is ready! 🎉' : 'your website preview is ready! 🎉') + '\n\n' +
+          '👉 ' + d.link + '\n' +
+          '🔑 Passcode: ' + d.code + '\n\n' +
+          'Just open the link and enter the passcode – it works on your computer, tablet and phone. Use the “Feedback” button to send me your notes directly.\n\n' +
+          'Looking forward to hearing what you think!\n\nBest regards,\n' + designer;
+      }
+    };
+
+    var current = {};
+
+    function render() {
+      var v = values();
+      if (!state.slugTouched) $('slug').value = Core.slugify(v.customer);
+      var ready = !!(v.slug && Core.normalizeCode(v.code));
+      var folder = ready ? Core.folderName(v.slug, v.code) : '';
+      var link = portalUrl() + '?p=' + encodeURIComponent(v.slug);
+      var magic = link + '#code=' + encodeURIComponent(Core.normalizeCode(v.code));
+      current = { v: v, folder: folder, link: link, magic: magic, json: previewJson(v) };
+
+      $('folder').innerHTML = folder ? esc(v.slug) + '<b>_' + esc(folder.slice(v.slug.length + 1)) + '</b>' : 'Enter a client name and passcode';
+      $('tree').innerHTML = folder
+        ? 'public/\n└── ' + esc(projectsFolder) + '/\n    └── <b>' + esc(folder) + '</b>/\n        ├── <i>' + esc(v.entry || 'index.html') + '</i>   ← your website\n        ├── css/, images/, …\n        └── <i>preview.json</i>   ← optional'
+        : '';
+      $('json').textContent = current.json;
+      $('link').textContent = ready ? link : '—';
+      $('code-out').textContent = v.code || '—';
+      $('magic').textContent = ready ? magic : '—';
+      $('qr').innerHTML = ready ? QR.svg(magic, { ecl: 'M', margin: 0, color: '#0b0b12' }) : '';
+      $('test').href = ready ? magic : '#';
+
+      var hint = $('rename-hint');
+      if (state.loadedFolder && folder && state.loadedFolder !== folder) {
+        hint.hidden = false;
+        hint.querySelector('span').innerHTML = 'Project ID or passcode changed. On your server, rename <code>' + esc(state.loadedFolder) + '</code> to <code>' + esc(folder) + '</code>. The old passcode stops working immediately.';
+      } else {
+        hint.hidden = true;
+      }
+
+      if (!state.messageTouched) {
+        $('message').value = ready ? MESSAGES[state.lang]({ customer: v.customer, title: v.title, link: link, code: v.code }) : '';
+      }
+      updateShareLinks();
+      document.querySelectorAll('[data-msg-lang]').forEach(function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-msg-lang') === state.lang)); });
+    }
+
+    function updateShareLinks() {
+      var text = $('message').value;
+      var subject = state.lang === 'de' ? 'Ihre Website-Vorschau' : 'Your website preview';
+      if (current.v && current.v.title) subject += ': ' + current.v.title;
+      $('send-mail').href = 'mailto:?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(text);
+      $('send-wa').href = 'https://wa.me/?text=' + encodeURIComponent(text);
+    }
+
+    function toast(msg) {
+      var t = $('toast');
+      t.querySelector('span').textContent = msg;
+      t.classList.add('show');
+      clearTimeout(toast.timer);
+      toast.timer = setTimeout(function () { t.classList.remove('show'); }, 1800);
+    }
+
+    function copy(text) {
+      function fallback() {
+        var ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.cssText = 'position:fixed;opacity:0';
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand('copy'); } catch (e) {}
+        ta.remove();
+      }
+      if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(text).catch(fallback);
+      else fallback();
+      toast('Copied');
+    }
+
+    function download(name, blob) {
+      var a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = name;
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+    }
+
+    function fill(p) {
+      fields.forEach(function (f) { $(f).value = p[f] || ''; });
+      state.slugTouched = true;
+      state.messageTouched = false;
+      state.loadedFolder = p.folder || null;
+      render();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function renderHistory() {
+      var list = load(PROJECTS_KEY, []);
+      if (!list.length) {
+        $('history').innerHTML = '<div class="empty">No saved projects yet. Click “Save to my projects” to keep client, link and passcode handy.</div>';
+        return;
+      }
+      $('history').innerHTML = '<table><thead><tr><th>Client</th><th>Project ID</th><th>Passcode</th><th>Folder</th><th>Saved</th><th></th></tr></thead><tbody>' +
+        list.map(function (p, i) {
+          return '<tr><td>' + esc(p.customer) + (p.title ? '<br><small style="color:var(--text-3)">' + esc(p.title) + '</small>' : '') + '</td>' +
+            '<td><code>' + esc(p.slug) + '</code></td><td><code>' + esc(p.code) + '</code></td><td><code style="color:var(--text-3)">' + esc(p.folder) + '</code></td>' +
+            '<td>' + esc((p.savedAt || '').slice(0, 10)) + '</td>' +
+            '<td class="actions"><button class="btn btn--icon" data-load="' + i + '" title="Load"><svg class="icon"><use href="#i-edit"/></svg></button>' +
+            '<button class="btn btn--icon" data-copy-link="' + i + '" title="Copy link + passcode"><svg class="icon"><use href="#i-copy"/></svg></button>' +
+            '<button class="btn btn--icon" data-delete="' + i + '" title="Delete from list"><svg class="icon"><use href="#i-trash"/></svg></button></td></tr>';
+        }).join('') + '</tbody></table>';
+    }
+
+    // ---------- events ----------
+    fields.forEach(function (f) {
+      $(f).addEventListener('input', function () {
+        if (f === 'slug') state.slugTouched = !!$('slug').value.trim();
+        state.messageTouched = false;
+        render();
+      });
+    });
+    $('slug').addEventListener('blur', function () { if ($('slug').value) $('slug').value = Core.slugify($('slug').value); render(); });
+    $('portal-url').addEventListener('input', function () { store(URL_KEY, $('portal-url').value.trim()); state.messageTouched = false; render(); });
+    $('message').addEventListener('input', function () { state.messageTouched = true; updateShareLinks(); });
+    $('new-code').addEventListener('click', function () { $('code').value = Core.generateCode(); state.messageTouched = false; render(); });
+
+    document.querySelectorAll('[data-msg-lang]').forEach(function (b) {
+      b.addEventListener('click', function () { state.lang = b.getAttribute('data-msg-lang'); store(LANG_KEY, state.lang); state.messageTouched = false; render(); });
+    });
+
+    document.addEventListener('click', function (e) {
+      var c = e.target.closest('[data-copy]');
+      if (c) {
+        var id = c.getAttribute('data-copy');
+        var text = id === 'json' ? current.json : id === 'message' ? $('message').value : id === 'folder' ? current.folder : $(id).textContent;
+        if (text && text !== '—') copy(text);
+        return;
+      }
+      var l = e.target.closest('[data-load]');
+      if (l) { fill(load(PROJECTS_KEY, [])[Number(l.getAttribute('data-load'))]); return; }
+      var cl = e.target.closest('[data-copy-link]');
+      if (cl) {
+        var p = load(PROJECTS_KEY, [])[Number(cl.getAttribute('data-copy-link'))];
+        copy(portalUrl() + '?p=' + encodeURIComponent(p.slug) + '\n' + p.code);
+        return;
+      }
+      var d = e.target.closest('[data-delete]');
+      if (d) {
+        var list = load(PROJECTS_KEY, []);
+        var item = list[Number(d.getAttribute('data-delete'))];
+        if (item && confirm('Remove “' + item.customer + '” from this list? (Files on your server are not touched.)')) {
+          list.splice(Number(d.getAttribute('data-delete')), 1);
+          store(PROJECTS_KEY, list);
+          renderHistory();
+        }
+      }
+    });
+
+    $('download-json').addEventListener('click', function () { download('preview.json', new Blob([current.json], { type: 'application/json' })); });
+
+    $('download-qr').addEventListener('click', function () {
+      if (!current.folder) return;
+      var svg = QR.svg(current.magic, { ecl: 'M', margin: 3, color: '#0b0b12', background: '#ffffff' });
+      var img = new Image();
+      var url = URL.createObjectURL(new Blob([svg], { type: 'image/svg+xml' }));
+      img.onload = function () {
+        var canvas = document.createElement('canvas');
+        canvas.width = canvas.height = 1024;
+        var ctx = canvas.getContext('2d');
+        ctx.imageSmoothingEnabled = false;
+        ctx.drawImage(img, 0, 0, 1024, 1024);
+        URL.revokeObjectURL(url);
+        canvas.toBlob(function (blob) { download('qr-' + current.v.slug + '.png', blob); });
+      };
+      img.src = url;
+    });
+
+    $('save').addEventListener('click', function () {
+      var v = values();
+      if (!v.customer || !current.folder) { toast('Please enter a client name and passcode'); return; }
+      var list = load(PROJECTS_KEY, []);
+      var entry = {};
+      fields.forEach(function (f) { entry[f] = $(f).value.trim(); });
+      entry.slug = v.slug;
+      entry.folder = current.folder;
+      entry.savedAt = new Date().toISOString();
+      var idx = list.findIndex(function (p) { return p.slug === v.slug; });
+      if (idx > -1) list[idx] = entry; else list.unshift(entry);
+      store(PROJECTS_KEY, list);
+      state.loadedFolder = current.folder;
+      renderHistory();
+      render();
+      toast('Saved to my projects');
+    });
+
+    $('reset').addEventListener('click', function () {
+      fields.forEach(function (f) { $(f).value = ''; });
+      $('code').value = Core.generateCode();
+      $('updated').value = today();
+      state.slugTouched = false;
+      state.messageTouched = false;
+      state.loadedFolder = null;
+      render();
+      $('customer').focus();
+    });
+
+    $('export').addEventListener('click', function () {
+      download('preview-projects-' + today() + '.json', new Blob([JSON.stringify(load(PROJECTS_KEY, []), null, 2)], { type: 'application/json' }));
+    });
+    $('import').addEventListener('change', function (e) {
+      var file = e.target.files && e.target.files[0];
+      if (!file) return;
+      file.text().then(function (text) {
+        var incoming = JSON.parse(text);
+        if (!Array.isArray(incoming)) throw new Error('not a list');
+        var list = load(PROJECTS_KEY, []);
+        incoming.forEach(function (p) {
+          if (!p || !p.slug) return;
+          var idx = list.findIndex(function (q) { return q.slug === p.slug; });
+          if (idx > -1) list[idx] = p; else list.push(p);
+        });
+        store(PROJECTS_KEY, list);
+        renderHistory();
+        toast('Imported ' + incoming.length + ' projects');
+      }).catch(function () { toast('That file could not be imported'); });
+      e.target.value = '';
+    });
+
+    // ---------- start ----------
+    $('portal-url').value = load(URL_KEY, '');
+    $('code').value = Core.generateCode();
+    $('updated').value = today();
+    render();
+    renderHistory();
+  })();
+  </script>
+</body>
+</html>
