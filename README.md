@@ -203,6 +203,7 @@ Every field is optional. Any text can be given in two languages, as `{ "de": "�
 | Claude: *"Could not reach api.netlify.com"* | Allow `api.netlify.com` and `*.netlify.app` in the environment's network access, then start a new session. |
 | Claude can't read a client repository or save changes | Connect GitHub at <https://claude.ai/connect-github> and allow the Claude app on those repositories. |
 | *"Netlify site … not found"* / name taken | Pick another `netlifySite` name: `node tools/publish.mjs setup --site <name>`. |
+| Clients see a Netlify login page | In Netlify → *Project configuration → Access & security → Visitor access*, limit "Netlify team login" to non-production deploys. |
 | React routes show a blank page or 404 | The router isn't one of the patched ones; add `basename={import.meta.env.BASE_URL}` to it. |
 | *"Passcode doesn't match"* although it's right (FileZilla) | Compare the folder name with the Studio's, and check that `index.html` sits directly inside it. |
 | A note says you opened the file from your computer | Use a local server (see *Try it locally*). |

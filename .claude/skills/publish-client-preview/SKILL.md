@@ -25,6 +25,10 @@ node tools/publish.mjs setup
 - **Site not found** → `setup` creates it from `publish.config.json` → `netlifySite`. If the name is taken, ask the user for
   another name and run `node tools/publish.mjs setup --site <name>` (it saves the name; commit `publish.config.json`).
 - If setup says the portal isn't online yet: `node tools/publish.mjs portal`.
+- **Live site shows a Netlify login page** → the site's visitor access requires "Netlify team login" for all deploys. It must
+  apply to non-production deploys only (Netlify MCP / connector: `update-visitor-access-controls` with
+  `appliesTo: non-production-projects`; or Netlify → Project configuration → Access & security → Visitor access).
+- The Netlify MCP / claude.ai Netlify connector is fine for such settings, but never use its `deploy-site` for this site.
 
 ## 2. Get the client project
 

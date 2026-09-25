@@ -1,7 +1,8 @@
 # Client Preview Portal
 
-Private, passcode-protected showroom for client websites. Static site, no backend. Live on Netlify
-(site name in `publish.config.json`); it also works on any FileZilla/Apache web space.
+Private, passcode-protected showroom for client websites. Static site, no backend. Hosted on Netlify
+(site `simontrummer-vorschau`, ID `da0788dc-8178-4e26-8839-ca050980a43b`, name also in `publish.config.json`);
+it also works on any FileZilla/Apache web space. This repository is **public**: never commit secrets or client builds.
 
 ## Layout
 
