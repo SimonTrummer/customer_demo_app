@@ -1,0 +1,6 @@
+# Netlify only (ignored by other servers). The Apache equivalent lives in .htaccess.
+/*
+  X-Robots-Tag: noindex, nofollow, noarchive
+  Referrer-Policy: same-origin
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: SAMEORIGIN

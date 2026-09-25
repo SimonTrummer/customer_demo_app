@@ -1,0 +1,8 @@
+{
+  "enabledMcpjsonServers": ["netlify"],
+  "permissions": {
+    "allow": [
+      "Bash(node tools/publish.mjs:*)"
+    ]
+  }
+}

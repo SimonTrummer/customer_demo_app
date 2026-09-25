@@ -249,7 +249,7 @@
           </div>
           <div class="field field--full">
             <label for="pages">Pages menu <span>one per line: Title | file.html</span></label>
-            <textarea id="pages" placeholder="Home | index.html&#10;Menu | menu.html"></textarea>
+            <textarea id="pages" placeholder="Start | index.html&#10;Über uns | ueber-uns"></textarea>
           </div>
         </div>
         <div class="btn-row" style="margin-top:18px">
@@ -267,6 +267,10 @@
               <span>Rename your website folder to exactly this:</span>
               <div class="value value--big"><code id="folder">—</code><button class="btn btn--icon" type="button" data-copy="folder" title="Copy"><svg class="icon"><use href="#i-copy"/></svg></button></div>
               <div class="path" id="tree"></div>
+            </div>
+            <div class="out-row">
+              <span>React / Vite project? This command builds it with the right paths and puts it into that folder (without <code>--local</code> it publishes straight to Netlify):</span>
+              <div class="value"><code id="vite-cmd">—</code><button class="btn btn--icon" type="button" data-copy="vite-cmd" title="Copy"><svg class="icon"><use href="#i-copy"/></svg></button></div>
             </div>
             <div class="callout" id="rename-hint" hidden><svg class="icon"><use href="#i-alert"/></svg><span></span></div>
             <div class="out-row">
@@ -372,7 +376,7 @@
     $('projects-folder-name').textContent = projectsFolder + '/';
     var designer = (CFG.contact && CFG.contact.name) || (CFG.brand && CFG.brand.name) || '';
 
-    var state = { slugTouched: false, loadedFolder: null, messageTouched: false, lang: load(LANG_KEY, /^de\b/i.test(navigator.language || '') ? 'de' : 'en') };
+    var state = { slugTouched: false, loadedFolder: null, messageTouched: false, lang: load(LANG_KEY, 'de') };
     var fields = ['customer', 'title', 'slug', 'code', 'domain', 'version', 'updated', 'device', 'entry', 'note', 'changes', 'pages'];
 
     function values() {
@@ -448,6 +452,10 @@
         ? 'public/\n└── ' + esc(projectsFolder) + '/\n    └── <b>' + esc(folder) + '</b>/\n        ├── <i>' + esc(v.entry || 'index.html') + '</i>   ← your website\n        ├── css/, images/, …\n        └── <i>preview.json</i>   ← optional'
         : '';
       $('json').textContent = current.json;
+      $('vite-cmd').textContent = ready
+        ? 'node tools/publish.mjs add ../your-project --name ' + JSON.stringify(v.customer || v.slug) + ' --slug ' + v.slug + ' --code ' + v.code +
+          (v.title ? ' --title ' + JSON.stringify(v.title) : '') + ' --local'
+        : '—';
       $('link').textContent = ready ? link : '—';
       $('code-out').textContent = v.code || '—';
       $('magic').textContent = ready ? magic : '—';

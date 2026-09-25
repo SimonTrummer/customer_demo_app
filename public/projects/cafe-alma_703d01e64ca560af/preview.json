@@ -1,18 +1,20 @@
 {
   "customer": "Café Alma",
-  "title": "Website Relaunch",
+  "title": { "de": "Website-Relaunch", "en": "Website Relaunch" },
   "domain": "www.cafe-alma.at",
-  "version": "Draft 2",
+  "version": { "de": "Entwurf 2", "en": "Draft 2" },
   "updated": "2026-09-25",
   "device": "desktop",
-  "note": "Here’s the second draft of your new website! I reworked the menu page and added the opening hours with a map. Take your time and click through it on desktop and on your phone – I’m looking forward to your feedback.",
-  "changes": [
-    "New menu page with all prices",
-    "Opening hours & map on the start page",
-    "Faster loading on mobile"
-  ],
+  "note": {
+    "de": "Hier ist der zweite Entwurf Ihrer neuen Website! Ich habe die Speisekarte überarbeitet und die Öffnungszeiten mit Karte ergänzt. Klicken Sie sich in Ruhe durch – am Computer und auf dem Handy. Ich freue mich auf Ihr Feedback!",
+    "en": "Here’s the second draft of your new website! I reworked the menu page and added the opening hours with a map. Take your time and click through it on desktop and on your phone – I’m looking forward to your feedback."
+  },
+  "changes": {
+    "de": ["Neue Speisekarten-Seite mit allen Preisen", "Öffnungszeiten & Karte auf der Startseite", "Schnelleres Laden am Smartphone"],
+    "en": ["New menu page with all prices", "Opening hours & map on the start page", "Faster loading on mobile"]
+  },
   "pages": [
-    { "title": "Home", "path": "index.html" },
-    { "title": "Menu", "path": "menu.html" }
+    { "title": "Start", "path": "index.html" },
+    { "title": "Speisekarte", "path": "speisekarte.html" }
   ]
 }

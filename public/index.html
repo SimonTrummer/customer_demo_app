@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-theme="dark">
+<html lang="de" data-theme="dark">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -7,14 +7,15 @@
   <meta name="robots" content="noindex, nofollow, noarchive">
   <meta name="referrer" content="same-origin">
   <meta name="theme-color" content="#07070b">
-  <title>Private Preview</title>
-  <meta name="description" content="Your personal website preview – private and secure.">
+  <title>Private Vorschau</title>
+  <meta name="description" content="Ihre persönliche Website-Vorschau – privat und geschützt.">
 
   <!-- Link preview in WhatsApp, iMessage, Slack, …
        Tip: use the full URL for og:image, e.g. https://preview.your-domain.com/assets/img/og-image.png -->
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Private Website Preview">
-  <meta property="og:description" content="Your personal website preview is ready. Open the link and enter your passcode.">
+  <meta property="og:locale" content="de_AT">
+  <meta property="og:title" content="Ihre Website-Vorschau">
+  <meta property="og:description" content="Ihre persönliche Website-Vorschau ist bereit. Link öffnen und Zugangscode eingeben.">
   <meta property="og:image" content="assets/img/og-image.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
@@ -243,8 +244,7 @@
             <span class="device__url"><svg class="icon"><use href="#i-lock"/></svg><span class="device__url-text"><span id="url-host"></span><span id="url-path"></span></span></span>
             <span class="device__tools">
               <span class="pages" id="pages" hidden>
-                <button type="button" class="pages__btn" id="pages-btn" aria-haspopup="true" aria-expanded="false"><svg class="icon"><use href="#i-file"/></svg><span data-i18n="pages"></span><svg class="icon pages__chev"><use href="#i-chevron-down"/></svg></button>
-                <span class="pages__list" id="pages-list" role="menu"></span>
+                <button type="button" class="pages__btn" id="pages-btn" aria-haspopup="true" aria-expanded="false" aria-controls="pages-list"><svg class="icon"><use href="#i-file"/></svg><span data-i18n="pages"></span><svg class="icon pages__chev"><use href="#i-chevron-down"/></svg></button>
               </span>
             </span>
           </div>
@@ -304,6 +304,8 @@
     <p data-i18n="qrText"></p>
     <button type="button" class="btn btn--ghost btn--sm btn--block" id="qr-copy"><svg class="icon"><use href="#i-copy"/></svg><span data-i18n="copyLink"></span></button>
   </div>
+
+  <div class="pages__list" id="pages-list" role="menu" aria-labelledby="pages-btn"></div>
 
   <div class="note" id="note" role="status" inert>
     <div class="note__head">

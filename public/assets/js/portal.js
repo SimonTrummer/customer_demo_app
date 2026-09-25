@@ -381,8 +381,9 @@
     }).filter(function (p) { return isSafePath(p.path); }) : [];
     var changes = pick(m.changes);
     changes = Array.isArray(changes) ? changes.map(str).filter(Boolean) : (str(changes) ? [str(changes)] : []);
-    var entry = str(m.entry) || 'index.html';
-    if (!isSafePath(entry)) entry = 'index.html';
+    // '' = the project folder itself. Single-page apps (React Router etc.) then see a clean base path.
+    var entry = normalizePagePath(str(m.entry));
+    if (entry && !isSafePath(entry)) entry = '';
     var device = ['desktop', 'tablet', 'mobile'].indexOf(m.device) > -1 ? m.device : '';
     return {
       customer: str(m.customer),
@@ -606,12 +607,21 @@
     }
   }
 
+  function insideFolder(res, base) {
+    if (!res.redirected) return true;
+    try {
+      return new URL(res.url).pathname.indexOf(new URL(base, location.href).pathname) === 0;
+    } catch (e) {
+      return false;
+    }
+  }
+
   /** Resolves to { base, meta } when the secret folder exists, null when not. Rejects on network errors. */
   function verify(slug, code) {
     var base = projectsBase() + Core.folderName(slug, code) + '/';
     var opts = { cache: 'no-store', credentials: 'same-origin' };
     return fetch(base + 'preview.json', opts).then(function (res) {
-      if (!res.ok || res.redirected) return null;
+      if (!res.ok || !insideFolder(res, base)) return null;
       return res.text().then(function (text) {
         var json = safeJson(text);
         if (!json && text.indexOf('name="preview-portal"') === -1) console.warn('[Preview] preview.json exists but is not valid JSON – using defaults.');
@@ -620,7 +630,7 @@
     }).then(function (json) {
       if (json) return { base: base, meta: json };
       return fetch(base + 'index.html', opts).then(function (res) {
-        if (!res.ok || res.redirected) return null;
+        if (!res.ok || !insideFolder(res, base)) return null;
         return res.text().then(function (html) {
           // Some hosts answer every unknown URL with the start page – that's not a real project.
           return html.indexOf('name="preview-portal"') > -1 ? null : { base: base, meta: {} };
@@ -1019,6 +1029,18 @@
     var href = frameHref();
     if (href !== state.lastHref) {
       state.lastHref = href;
+      var nav = state.nav;
+      // In-app navigation of single-page apps (history.pushState) – no load event fires.
+      if (href && nav.pending === null && nav.stack.length && href !== nav.stack[nav.index]) {
+        if (href === nav.stack[nav.index - 1]) nav.index -= 1;
+        else if (href === nav.stack[nav.index + 1]) nav.index += 1;
+        else {
+          nav.stack = nav.stack.slice(0, nav.index + 1);
+          nav.stack.push(href);
+          nav.index = nav.stack.length - 1;
+        }
+        updateNav();
+      }
       updateUrlBar();
     }
   }
@@ -1047,14 +1069,19 @@
   function openPage(index) {
     var p = meta().pages[index];
     if (!p) return;
-    navigateFrame(new URL(state.base + p.path, location.href).href, false);
+    navigateFrame(new URL(state.base + normalizePagePath(p.path), location.href).href, false);
     togglePagesMenu(false);
     closeAll();
   }
 
   function togglePagesMenu(force) {
-    var open = force != null ? force : !el.pages.classList.contains('is-open');
-    el.pages.classList.toggle('is-open', open);
+    var open = force != null ? force : !el.pagesList.classList.contains('is-open');
+    if (open) {
+      var r = el.pagesBtn.getBoundingClientRect();
+      el.pagesList.style.top = Math.round(r.bottom + 8) + 'px';
+      el.pagesList.style.right = Math.max(8, Math.round(window.innerWidth - r.right)) + 'px';
+    }
+    el.pagesList.classList.toggle('is-open', open);
     el.pagesBtn.setAttribute('aria-expanded', String(open));
   }
 
@@ -1369,7 +1396,7 @@
         else if (panel) closePanel(panel);
         return;
       }
-      if (el.pages.classList.contains('is-open') && !el.pages.contains(e.target)) togglePagesMenu(false);
+      if (el.pagesList.classList.contains('is-open') && !el.pagesList.contains(e.target) && !el.pagesBtn.contains(e.target)) togglePagesMenu(false);
       if (el.qrPopover.classList.contains('is-open') && !el.qrPopover.contains(e.target) && !el.qrBtn.contains(e.target)) closePanel(el.qrPopover);
     });
 
@@ -1396,7 +1423,7 @@
 
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape') {
-        if ($('.drawer.is-open, .modal.is-open, .popover.is-open') || el.pages.classList.contains('is-open')) closeAll();
+        if ($('.drawer.is-open, .modal.is-open, .popover.is-open') || el.pagesList.classList.contains('is-open')) closeAll();
         else if (el.note.classList.contains('is-open')) hideNote();
         return;
       }
@@ -1410,6 +1437,7 @@
     // Layout
     var resizeTimer;
     function onResize() {
+      togglePagesMenu(false);
       el.viewer.classList.add('is-resizing');
       layout();
       moveThumb();

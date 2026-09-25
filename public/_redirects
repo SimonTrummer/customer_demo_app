@@ -1,0 +1,5 @@
+# Netlify only (ignored by other servers).
+# Single-page apps (React/Vite with React Router): paths inside a client project
+# that aren't real files load that project's index.html, so deep links and reloads work.
+# If you rename the projects folder in config.js, rename it here too.
+/projects/:folder/*   /projects/:folder/index.html   200

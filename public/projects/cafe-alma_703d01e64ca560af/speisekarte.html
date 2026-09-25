@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Speisekarte — Café Alma</title>
+  <meta name="description" content="Kaffee, Gebäck, Frühstück und kalte Getränke im Café Alma, Wien.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='18' r='8' fill='%23c8643b'/%3E%3C/svg%3E">
+  <link rel="preload" href="fonts/fraunces-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="header" id="top">
+    <div class="wrap header__inner">
+      <a class="logo" href="index.html" aria-label="Café Alma – Startseite">
+        <svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="19" r="7" fill="#C8643B"/><path d="M16 4.5v4M6.2 8.7l2.8 2.8M25.8 8.7 23 11.5M3.5 19h3.5M25 19h3.5" stroke="#C8643B" stroke-width="2.2" stroke-linecap="round"/><path d="M4 27h24" stroke="#2A1B12" stroke-width="2.2" stroke-linecap="round"/></svg>
+        Alma
+      </a>
+      <nav class="nav" aria-label="Hauptmenü">
+        <a href="speisekarte.html" aria-current="page">Speisekarte</a>
+        <a href="index.html#geschichte">Unsere Geschichte</a>
+        <a href="index.html#besuch">Besuch</a>
+      </nav>
+      <a class="btn btn--primary" href="index.html#besuch">Tisch reservieren</a>
+      <button class="menu-toggle" type="button" aria-label="Menü öffnen" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-hero">
+      <div class="wrap">
+        <span class="eyebrow">Den ganzen Tag</span>
+        <h1>Die <em>Speisekarte.</em></h1>
+        <p>Bei uns gebacken, gebrüht und angerichtet. Preise in Euro inkl. MwSt. Fragen Sie nach unseren saisonalen Tagesempfehlungen.</p>
+        <nav class="menu-tabs" aria-label="Bereiche der Speisekarte">
+          <a href="#kaffee">Kaffee</a><a href="#gebaeck">Gebäck</a><a href="#fruehstueck">Frühstück</a><a href="#kalt">Kalte Getränke</a>
+        </nav>
+      </div>
+    </section>
+
+    <div class="wrap">
+      <section class="menu-section" id="kaffee">
+        <div class="menu-section__grid">
+          <div class="menu-section__intro reveal"><span class="eyebrow">01</span><h2>Kaffee</h2><p>Single Origin, geröstet in Wien. Hafer-, Mandel- oder laktosefreie Milch ohne Aufpreis.</p></div>
+          <div class="menu-list">
+            <div class="menu-item reveal"><h3>Espresso</h3><i></i><b>2,60</b><p>Fruchtig und schokoladig, derzeit aus Huila, Kolumbien.</p></div>
+            <div class="menu-item reveal"><h3>Flat White</h3><i></i><b>3,90</b><p>Doppelter Ristretto mit samtiger Milch.</p></div>
+            <div class="menu-item reveal"><h3>Cappuccino</h3><i></i><b>3,80</b><p>Der Klassiker, mit großzügigem Milchschaum.</p></div>
+            <div class="menu-item reveal"><h3>Hafer-Latte <span class="tag">vegan</span></h3><i></i><b>4,20</b><p>Cremig, nussig und natürlich süß.</p></div>
+            <div class="menu-item reveal"><h3>Kardamom-Latte <span class="tag">Saison</span></h3><i></i><b>4,60</b><p>Unsere Schnecke in der Tasse – mit hausgemachtem Kardamomsirup.</p></div>
+            <div class="menu-item reveal"><h3>Filterkaffee des Tages</h3><i></i><b>3,50</b><p>Handgebrüht, wechselnde Herkunft.</p></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="menu-section" id="gebaeck">
+        <div class="menu-section__grid">
+          <div class="menu-section__intro reveal"><span class="eyebrow">02</span><h2>Gebäck</h2><p>Aus dem eigenen Ofen, jeden Morgen ab 5 Uhr. Was abends übrig bleibt, geht an Foodsharing.</p></div>
+          <div class="menu-list">
+            <div class="menu-item reveal"><h3>Kardamomschnecke</h3><i></i><b>3,80</b><p>Unser Bestseller seit Tag eins.</p></div>
+            <div class="menu-item reveal"><h3>Buttercroissant</h3><i></i><b>2,90</b><p>Von Hand touriert, mit österreichischer Butter.</p></div>
+            <div class="menu-item reveal"><h3>Pain au Chocolat</h3><i></i><b>3,40</b><p>Zwei Stangen Zartbitterschokolade, blättrige Schichten.</p></div>
+            <div class="menu-item reveal"><h3>Saisonale Obsttarte</h3><i></i><b>4,90</b><p>Mandelcreme und Obst vom Markt.</p></div>
+            <div class="menu-item reveal"><h3>Sauerteiglaib</h3><i></i><b>6,50</b><p>48 Stunden Reifung – zum Mitnehmen.</p></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="menu-section" id="fruehstueck">
+        <div class="menu-section__grid">
+          <div class="menu-section__intro reveal"><span class="eyebrow">03</span><h2>Frühstück</h2><p>Bis 15 Uhr – denn gute Morgen sollten nicht um 11 enden.</p></div>
+          <div class="menu-list">
+            <div class="menu-item reveal"><h3>Alma-Frühstück</h3><i></i><b>13,90</b><p>Weiche Eier, Sauerteigbrot, Sauerrahmbutter, Marmelade, Käse, Obst der Saison.</p></div>
+            <div class="menu-item reveal"><h3>Shakshuka</h3><i></i><b>12,50</b><p>Gewürzte Tomaten, pochierte Eier, Feta, Kräuter, geröstetes Sauerteigbrot.</p></div>
+            <div class="menu-item reveal"><h3>Avocado-Brot <span class="tag">vegan</span></h3><i></i><b>11,90</b><p>Chili, Limette, eingelegte Zwiebeln, Saaten.</p></div>
+            <div class="menu-item reveal"><h3>Brioche French Toast</h3><i></i><b>11,50</b><p>Karamellisierte Äpfel, Crème fraîche, Ahornsirup.</p></div>
+            <div class="menu-item reveal"><h3>Granola-Bowl</h3><i></i><b>8,90</b><p>Hausgemachtes Granola, Joghurt, Kompott, Honig.</p></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="menu-section" id="kalt">
+        <div class="menu-section__grid">
+          <div class="menu-section__intro reveal"><span class="eyebrow">04</span><h2>Kalte Getränke</h2><p>Wo immer es geht, selbst gemacht.</p></div>
+          <div class="menu-list">
+            <div class="menu-item reveal"><h3>Hausgemachte Limonade</h3><i></i><b>4,20</b><p>Zitrone &amp; Thymian, in der Saison Rhabarber.</p></div>
+            <div class="menu-item reveal"><h3>Iced Latte</h3><i></i><b>4,40</b><p>Doppelter Espresso auf kalter Milch.</p></div>
+            <div class="menu-item reveal"><h3>Cold Brew</h3><i></i><b>4,20</b><p>18 Stunden angesetzt.</p></div>
+            <div class="menu-item reveal"><h3>Kombucha</h3><i></i><b>4,50</b><p>Von einer kleinen Brauerei in Ottakring.</p></div>
+          </div>
+        </div>
+      </section>
+
+      <p class="allergens">Allergeninformationen erhalten Sie an der Theke. Bitte sagen Sie uns Bescheid, wenn Sie Allergien oder Unverträglichkeiten haben – wir helfen gerne weiter.</p>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap">
+      <div class="footer__grid">
+        <div>
+          <a class="logo" href="index.html">Alma</a>
+          <p style="margin-top:14px;max-width:280px">Kaffee, Brot &amp; langsame Morgen in Wien-Neubau.</p>
+        </div>
+        <div><h4>Besuch</h4><ul><li>Sonnenweg 7</li><li>1070 Wien</li><li>Mo–Fr 7–18 Uhr</li></ul></div>
+        <div><h4>Entdecken</h4><ul><li><a href="speisekarte.html">Speisekarte</a></li><li><a href="index.html#geschichte">Unsere Geschichte</a></li><li><a href="index.html#besuch">Öffnungszeiten</a></li></ul></div>
+        <div><h4>Folgen</h4><ul><li><a href="https://www.instagram.com/" rel="noopener">Instagram</a></li><li><a href="mailto:hallo@cafe-alma.example">Newsletter</a></li></ul></div>
+      </div>
+      <div class="footer__bottom"><span>© 2026 Café Alma</span><span>Impressum · Datenschutz</span></div>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

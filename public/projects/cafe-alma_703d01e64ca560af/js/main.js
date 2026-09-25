@@ -1,4 +1,4 @@
-// Café Alma — small enhancements (demo client website)
+// Café Alma — kleine Extras (Demo-Kundenwebsite)
 (function () {
   var header = document.querySelector('.header');
   var toggle = document.querySelector('.menu-toggle');
@@ -12,19 +12,19 @@
   toggle.addEventListener('click', function () {
     var open = document.body.classList.toggle('menu-open');
     toggle.setAttribute('aria-expanded', String(open));
-    toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    toggle.setAttribute('aria-label', open ? 'Menü schließen' : 'Menü öffnen');
   });
   document.querySelectorAll('.nav a').forEach(function (a) {
     a.addEventListener('click', function () { document.body.classList.remove('menu-open'); });
   });
 
-  // Highlight today's opening hours
+  // Heutige Öffnungszeit hervorheben
   var today = new Date().getDay();
   document.querySelectorAll('.hours tr[data-days]').forEach(function (row) {
     if (row.getAttribute('data-days').split(',').indexOf(String(today)) > -1) row.classList.add('is-today');
   });
 
-  // Reveal on scroll
+  // Beim Scrollen einblenden
   var items = document.querySelectorAll('.reveal');
   if (!('IntersectionObserver' in window)) {
     items.forEach(function (el) { el.classList.add('is-visible'); });

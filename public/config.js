@@ -29,8 +29,9 @@ window.PORTAL_CONFIG = {
   accent: '#7C5CFF',                   // your main brand color
   accent2: '',                         // second gradient color — empty = calculated automatically
 
-  // Language of the portal: 'auto' (visitor's browser), 'de' or 'en'
-  language: 'auto',
+  // Language of the portal: 'de' (default), 'en' or 'auto' (visitor's browser language).
+  // Visitors can always switch between DE and EN.
+  language: 'de',
 
   // Behaviour
   projectsFolder: 'projects',          // the folder that contains your client projects

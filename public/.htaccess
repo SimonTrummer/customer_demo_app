@@ -18,6 +18,15 @@
   </FilesMatch>
 </IfModule>
 
+# Single-page apps (React/Vite with React Router): paths inside a client project
+# that aren't real files load that project's index.html (deep links and reloads work).
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^projects/([^/]+)/(?!index\.html$) projects/$1/index.html [L]
+</IfModule>
+
 # Stop directory listings everywhere. The portal already protects the
 # projects folder with an index.html, so this is only a second layer.
 # Some hosts don't allow this line – remove the # to activate it.
